@@ -1,0 +1,28 @@
+version: "3.9"
+
+services:
+  split-smart-web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - "5178:80"
+    depends_on:
+      - split-smart-api
+    restart: unless-stopped
+
+  split-smart-api:
+    build:
+      context: .
+      dockerfile: Dockerfile.api
+    ports:
+      - "3005:3005"
+    volumes:
+      - api-data:/app/data
+    environment:
+      - PORT=3005
+      - DB_PATH=/app/data/split-smart.db
+    restart: unless-stopped
+
+volumes:
+  api-data:
